@@ -180,6 +180,7 @@ pub struct EncoderConfig {
     rate_control_mode: RateControlMode,
     sps_pps_strategy: SpsPpsStrategy,
     multiple_thread_idc: u16,
+    max_nal_size: u32,
 }
 
 impl EncoderConfig {
@@ -197,6 +198,7 @@ impl EncoderConfig {
             rate_control_mode: Default::default(),
             sps_pps_strategy: Default::default(),
             multiple_thread_idc: 0,
+            max_nal_size: 1500,
         }
     }
 
@@ -277,6 +279,7 @@ impl Encoder {
             params.fMaxFrameRate = config.max_frame_rate;
             params.eSpsPpsIdStrategy = config.sps_pps_strategy.to_c();
             params.iMultipleThreadIdc = config.multiple_thread_idc;
+            params.uiMaxNalSize = config.max_nal_size;
             raw_api.initialize_ext(&params).ok()?;
 
             raw_api.set_option(ENCODER_OPTION_TRACE_LEVEL, addr_of_mut!(config.debug).cast()).ok()?;
