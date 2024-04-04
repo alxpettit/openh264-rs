@@ -182,7 +182,7 @@ pub struct EncoderConfig {
     multiple_thread_idc: u16,
     max_nal_size: u32,
     // TODO: use enum?
-    slice_mode: u32,
+    slice_mode: i32,
 }
 
 impl EncoderConfig {
@@ -247,7 +247,7 @@ impl EncoderConfig {
     }
 
     /// Set the slice mode.
-    pub fn slice_mode(mut self, value: u32) -> Self {
+    pub fn slice_mode(mut self, value: i32) -> Self {
         self.slice_mode = value;
         self
     }
@@ -294,7 +294,7 @@ impl Encoder {
             params.eSpsPpsIdStrategy = config.sps_pps_strategy.to_c();
             params.iMultipleThreadIdc = config.multiple_thread_idc;
             params.uiMaxNalSize = config.max_nal_size;
-            params.sSpatialLayers.iter_mut().for_each(|x| x.sSliceArgument.uiSliceSizeConstraint = config.slice_mode);
+            params.sSpatialLayers.iter_mut().for_each(|x| x.sSliceArgument.uiSliceMode = config.slice_mode);
             raw_api.initialize_ext(&params).ok()?;
 
             raw_api.set_option(ENCODER_OPTION_TRACE_LEVEL, addr_of_mut!(config.debug).cast()).ok()?;
