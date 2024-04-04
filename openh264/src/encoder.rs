@@ -183,6 +183,7 @@ pub struct EncoderConfig {
     max_nal_size: u32,
     // TODO: use enum?
     slice_mode: i32,
+    slice_size_constraint: u32,
 }
 
 impl EncoderConfig {
@@ -202,6 +203,7 @@ impl EncoderConfig {
             multiple_thread_idc: 0,
             max_nal_size: 0,
             slice_mode: 0,
+            slice_size_constraint: 0,
         }
     }
 
@@ -252,6 +254,12 @@ impl EncoderConfig {
         self
     }
 
+    /// Set the slice size constraint.
+    pub fn slice_size_constraint(mut self, value: u32) -> Self {
+        self.slice_size_constraint = value;
+        self
+    }
+
     /// Sets the number of internal encoder threads.
     ///
     /// * 0 - auto mode
@@ -295,6 +303,7 @@ impl Encoder {
             params.iMultipleThreadIdc = config.multiple_thread_idc;
             params.uiMaxNalSize = config.max_nal_size;
             params.sSpatialLayers.iter_mut().for_each(|x| x.sSliceArgument.uiSliceMode = config.slice_mode);
+            params.sSpatialLayers.iter_mut().for_each(|x| x.sSliceArgument.uiSliceSizeConstraint = config.slice_size_constraint);
             raw_api.initialize_ext(&params).ok()?;
 
             raw_api.set_option(ENCODER_OPTION_TRACE_LEVEL, addr_of_mut!(config.debug).cast()).ok()?;
