@@ -240,6 +240,17 @@ impl EncoderConfig {
         self.sps_pps_strategy = value;
         self
     }
+    /// Set the maximum nal size.
+    pub fn max_nal_size(mut self, value: u32) -> Self {
+        self.max_nal_size = value;
+        self
+    }
+
+    /// Set the slice mode.
+    pub fn slice_mode(mut self, value: u32) -> Self {
+        self.slice_mode = value;
+        self
+    }
 
     /// Sets the number of internal encoder threads.
     ///
